@@ -3,7 +3,8 @@ import time
 import hashlib
 import hmac
 import json
-import requests
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError, URLError
 
 class Connection:
     def __init__( self, aAPIKey, aPrivateKey ):
@@ -59,7 +60,7 @@ class Connection:
             return json.loads( str(response.read(), "utf-8") )
 
         except URLError as e:
-            errObject = json.loads(e.read())
+            errObject = json.loads( e.read())
             if hasattr( e, 'code' ):
                 errObject['statusCode'] = e.code
 
