@@ -55,9 +55,9 @@ class Connection:
             if aMethod == 'POST' or aMethod == 'PUT':
                 lResponse = urlopen( lRequest, data = bytes( data, encoding="utf-8" ) )
             else:
-                response = urlopen( lRequest )
+                lResponse = urlopen( lRequest )
 
-            return json.loads( str(response.read(), "utf-8") )
+            return json.loads( str( lResponse.read(), "utf-8") )
 
         except URLError as e:
             errObject = json.loads( e.read())
