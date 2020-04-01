@@ -1,5 +1,6 @@
 from connection import Connection
 import json
+import time
 
 class Trader:
     def __init__( self, aAPIKey, aPrivateKey ):
@@ -37,3 +38,12 @@ class Trader:
     def getOrderStatus( self, aOrderID ):
         lResponse = self.Connection.makeHTTPRequest( 'GET', '/v3/orders/' + aOrderID, "" )
         return lResponse["status"]
+
+    # TODO: Add Timeout
+    def waitForMatchedTrade( self, aOrderID ):
+        while( True ):
+            lStatus = self.getOrderStatus( aOrderID )
+            if( lStatus == "Fully Matched"):
+                return
+            else:
+                time.sleep(20)
