@@ -1,14 +1,20 @@
 from trader import Trader
+from logger import Logger
 
-API_KEY = "0518eb10-4c30-42ea-b35c-3e460b92bb16"
-SECRET_KEY = "0PdlKrG+Pmyb31J/UfLfysOIxtkRys2zoCceDaCeGj8Rk3cD+zTFZ4Q2yazfsyQRqQ3fdl7yBU+RJDJSXwWE6Q=="
+API_KEY = ""
+SECRET_KEY = ""
 
 Trader = Trader( API_KEY, SECRET_KEY )
+Logger = Logger()
+
+last_XRP_price =  Trader.getLastPrice( "XRP-AUD")
+invesment = 0.5
+amount =  int ( invesment / float( last_XRP_price ) )
 
 while( True ):
     lLastXRPPrice =  Trader.getLastPrice( "XRP-AUD")
-    lAmount =  int ( 4 / float( lLastXRPPrice ) )
-    lOrder = Trader.placeBacicLimitOrder( "XRP-AUD", str( lLastXRPPrice ), lAmount, "bid" )
+    lAmount =  int ( invesment / float( lLastXRPPrice ) )
+    lOrder = Trader.placeBasicLimitOrder( "XRP-AUD", str( lLastXRPPrice ), lAmount, "bid" )
     print( lOrder )
     if( lOrder['status'] != "Accepted" ):
         exit()
@@ -20,7 +26,7 @@ while( True ):
     
     lSellPrice = float( lLastXRPPrice ) * 1.0115
     print( lSellPrice )
-    lSale = Trader.placeBacicLimitOrder( "XRP-AUD", str(lSellPrice)[0:5], lAmount, "ask" )
+    lSale = Trader.placeBasicLimitOrder( "XRP-AUD", str(lSellPrice)[0:5], lAmount, "ask" )
     print( lSale )
     if( lSale['status'] != "Accepted" ):
         exit()
@@ -28,4 +34,3 @@ while( True ):
     Trader.waitForMatchedTrade( lSale["orderId"] )
     print( "Sale Matched" )
     exit()
-

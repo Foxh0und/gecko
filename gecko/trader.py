@@ -12,7 +12,7 @@ class Trader:
     def get_account_balance(self):
         return self.Connection.makeHTTPRequest('GET', '/v3/accounts/me/balances', 'status=all')
 
-    def get_orders( self):
+    def get_orders(self):
         return self.Connection.makeHTTPRequest('GET',  '/v3/orders', 'status=all')
 
     def get_markets(self):
@@ -25,7 +25,7 @@ class Trader:
     def get_BTC_ticketer(self):
         return self.Connection.makeHTTPRequest('GET',  '/v3/markets/XRP-AUD/ticker', 'status=all')
 
-    def placeBacicLimitOrder(self, aMarketID, aPrice, aAmount, aSide ):
+    def placeBasicLimitOrder(self, aMarketID, aPrice, aAmount, aSide ):
         lData = dict(
             marketId = aMarketID,
             price = aPrice,
@@ -34,6 +34,35 @@ class Trader:
             side = aSide
         )
         return self.Connection.makeHTTPRequest( 'POST', '/v3/orders', "", lData )
+
+    #Does not work for XRP
+    def place_take_profit_order(self, market_id, price, amount):
+
+        trigger_price = float(price) * 1.1
+
+        data = dict(
+            marketId = market_id,
+            price = price, 
+            amount = amount,
+            type = "Take Profit",
+            side = "ask", 
+            triggerPrice = str(trigger_price)
+        )
+        return self.Connection.makeHTTPRequest( 'POST', '/v3/orders', "", data )
+
+    def place_stop_loss_order(self, market_id, price, amount):
+
+        trigger_price = float(price) * 0.9885
+
+        data = dict(
+            marketId = market_id,
+            price = price, 
+            amount = amount,
+            type = "Stop Loss",
+            side = "bid", 
+            triggerPrice = str(trigger_price)
+        )
+        return self.Connection.makeHTTPRequest( 'POST', '/v3/orders', "", data )
 
     def getOrderStatus( self, aOrderID ):
         lResponse = self.Connection.makeHTTPRequest( 'GET', '/v3/orders/' + aOrderID, "" )
